@@ -65,7 +65,7 @@ export function ContactForm() {
       <motion.div
         initial={{ opacity: 0, scale: 0.95 }}
         animate={{ opacity: 1, scale: 1 }}
-        className="bg-background border border-border rounded-2xl p-8 text-center space-y-6 shadow-xl"
+        className="bg-background/90 border border-primary/30 rounded-2xl p-8 text-center space-y-6 shadow-[0_24px_48px_oklch(0.12_0.05_252_/_0.65)]"
       >
         <div className="w-16 h-16 bg-primary/10 rounded-full flex items-center justify-center mx-auto">
           <CheckCircle2 className="w-8 h-8 text-primary" />
@@ -84,7 +84,8 @@ export function ContactForm() {
   }
 
   return (
-    <div className="bg-background border border-border rounded-2xl p-8 shadow-xl">
+    <div className="relative rounded-2xl p-[1px] bg-gradient-to-br from-primary/40 via-accent/35 to-primary/30 shadow-[0_30px_60px_oklch(0.12_0.05_252_/_0.72)]">
+      <div className="bg-background/90 border border-primary/20 rounded-2xl p-8">
       <Form {...form}>
         <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
@@ -93,9 +94,9 @@ export function ContactForm() {
               name="name"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>Full Name</FormLabel>
+                  <FormLabel className="uppercase text-[10px] tracking-[0.2em] text-muted-foreground">Full Name</FormLabel>
                   <FormControl>
-                    <Input placeholder="John Doe" {...field} />
+                    <Input placeholder="John Doe" className="h-11" {...field} />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
@@ -106,9 +107,9 @@ export function ContactForm() {
               name="email"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>Email Address</FormLabel>
+                  <FormLabel className="uppercase text-[10px] tracking-[0.2em] text-muted-foreground">Email Address</FormLabel>
                   <FormControl>
-                    <Input placeholder="john@example.com" {...field} />
+                    <Input placeholder="john@example.com" className="h-11" {...field} />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
@@ -122,9 +123,9 @@ export function ContactForm() {
               name="phone"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>Phone Number</FormLabel>
+                  <FormLabel className="uppercase text-[10px] tracking-[0.2em] text-muted-foreground">Phone Number</FormLabel>
                   <FormControl>
-                    <Input placeholder="+91 94308 04147" {...field} />
+                    <Input placeholder="+91 94308 04147" className="h-11" {...field} />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
@@ -135,10 +136,10 @@ export function ContactForm() {
               name="service"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>Service Required</FormLabel>
+                  <FormLabel className="uppercase text-[10px] tracking-[0.2em] text-muted-foreground">Service Required</FormLabel>
                   <Select onValueChange={field.onChange} defaultValue={field.value}>
                     <FormControl>
-                      <SelectTrigger>
+                      <SelectTrigger className="h-11">
                         <SelectValue placeholder="Select a service" />
                       </SelectTrigger>
                     </FormControl>
@@ -161,11 +162,11 @@ export function ContactForm() {
             name="message"
             render={({ field }) => (
               <FormItem>
-                <FormLabel>Message</FormLabel>
+                <FormLabel className="uppercase text-[10px] tracking-[0.2em] text-muted-foreground">Message</FormLabel>
                 <FormControl>
                   <Textarea
                     placeholder="Tell us about your business goals..."
-                    className="min-h-[120px]"
+                    className="min-h-[140px]"
                     {...field}
                   />
                 </FormControl>
@@ -174,18 +175,19 @@ export function ContactForm() {
             )}
           />
 
-          <Button type="submit" className="w-full h-12 gap-2 text-lg" disabled={isSubmitting}>
+          <Button type="submit" className="w-full h-12 gap-2 text-lg group" disabled={isSubmitting}>
             {isSubmitting ? (
               'Sending...'
             ) : (
               <>
-                <Send className="w-4 h-4" />
+                <Send className="w-4 h-4 transition-transform group-hover:translate-x-1" />
                 Start Growing Today
               </>
             )}
           </Button>
         </form>
       </Form>
+      </div>
     </div>
   )
 }
