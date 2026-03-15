@@ -118,7 +118,10 @@ export function AdminEditor({ initialContent }: AdminEditorProps) {
 
   const logout = async () => {
     await fetch("/api/admin/logout", { method: "POST" })
-    startTransition(() => router.refresh())
+    startTransition(() => {
+      router.push("/")
+      router.refresh()
+    })
   }
 
   const renderField = (

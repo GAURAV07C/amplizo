@@ -7,8 +7,8 @@ import { Input } from "@/components/ui/input"
 
 export function AdminLoginForm() {
   const router = useRouter()
-  const [email, setEmail] = useState("admin@amplizo.com")
-  const [password, setPassword] = useState("amplizo#business")
+  const [email, setEmail] = useState("")
+  const [password, setPassword] = useState("")
   const [error, setError] = useState("")
   const [isPending, startTransition] = useTransition()
 
@@ -37,12 +37,19 @@ export function AdminLoginForm() {
     <form onSubmit={handleSubmit} className="space-y-5">
       <div className="space-y-2">
         <label className="text-sm font-medium text-slate-700">Admin Email</label>
-        <Input value={email} onChange={(event) => setEmail(event.target.value)} className="h-12 rounded-2xl border-slate-200/80 bg-slate-50/80" />
+        <Input
+          type="email"
+          autoComplete="username"
+          value={email}
+          onChange={(event) => setEmail(event.target.value)}
+          className="h-12 rounded-2xl border-slate-200/80 bg-slate-50/80"
+        />
       </div>
       <div className="space-y-2">
         <label className="text-sm font-medium text-slate-700">Password</label>
         <Input
           type="password"
+          autoComplete="current-password"
           value={password}
           onChange={(event) => setPassword(event.target.value)}
           className="h-12 rounded-2xl border-slate-200/80 bg-slate-50/80"
