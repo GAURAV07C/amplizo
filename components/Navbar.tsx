@@ -1,140 +1,91 @@
-﻿'use client'
+"use client"
 
-import * as React from 'react'
-import Link from 'next/link'
-import { usePathname } from 'next/navigation'
-import { motion, AnimatePresence } from 'motion/react'
-import { Menu, X, Phone } from 'lucide-react'
-import { cn } from '@/lib/utils'
-import { Button } from '@/components/ui/button'
-import { BrandLogo } from '@/components/BrandLogo'
+import { useState, useEffect } from "react"
+import Link from "next/link"
+import { Button } from "@/components/ui/button"
+import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet"
+import { Menu } from "lucide-react"
+import { BrandLogo } from "@/components/brand-logo"
+import type { SiteContent } from "@/lib/site-content"
 
-const navItems = [
-  { name: 'Home', href: '/' },
-  { name: 'About Us', href: '/about' },
-  { name: 'Services', href: '/services' },
-  { name: 'Contact Us', href: '/contact' },
-]
+type NavbarProps = {
+  content: SiteContent["navbar"]
+  logo: SiteContent["site"]["logo"]
+}
 
-export function Navbar() {
-  const [isOpen, setIsOpen] = React.useState(false)
-  const [scrolled, setScrolled] = React.useState(false)
-  const pathname = usePathname()
+export function Navbar({ content, logo }: NavbarProps) {
+  const [isOpen, setIsOpen] = useState(false)
+  const [mounted, setMounted] = useState(false)
 
-  React.useEffect(() => {
-    const handleScroll = () => setScrolled(window.scrollY > 20)
-    window.addEventListener('scroll', handleScroll, { passive: true })
-    return () => window.removeEventListener('scroll', handleScroll)
+  useEffect(() => {
+    setMounted(true)
   }, [])
 
   return (
-    <nav
-      className={cn(
-        'fixed left-0 right-0 z-50 transition-all duration-700',
-        scrolled ? 'top-5 px-4' : 'top-0 px-0'
-      )}
-    >
-      <div
-        className={cn(
-          'mx-auto transition-all duration-700 flex items-center justify-between',
-          scrolled
-            ? 'max-w-6xl glass rounded-[30px] py-3 px-8 border-primary/30'
-            : 'max-w-full bg-background/60 backdrop-blur-2xl py-6 px-8 border-b border-primary/20'
-        )}
-      >
-        <Link href="/" className="group">
-          <BrandLogo
-            priority
-            className={cn('transition-all duration-700', scrolled ? 'w-[230px]' : 'w-[290px]')}
-            imageClassName={cn('transition-all duration-700', scrolled ? 'max-h-12' : 'max-h-16')}
-          />
-        </Link>
+    <header className="sticky top-0 z-50 w-full border-b border-white/70 bg-white/72 backdrop-blur-xl supports-[backdrop-filter]:bg-white/55">
+      <div className="container mx-auto flex h-20 items-center justify-between px-4 md:px-6">
+        {/* Logo */}
+        <BrandLogo logo={logo} />
 
-        <div className="hidden md:flex items-center gap-10">
-          {navItems.map((item) => {
-            const isActive = pathname === item.href
-            return (
-              <motion.div key={item.name} whileHover={{ y: -2 }} transition={{ duration: 0.2 }}>
-                <Link
-                  href={item.href}
-                  className={cn(
-                    'text-xs font-bold uppercase tracking-[0.2em] transition-all relative group py-1',
-                    isActive ? 'text-primary' : 'text-foreground/70 hover:text-primary'
-                  )}
-                >
-                  {item.name}
-                  {isActive ? (
-                    <motion.span
-                      layoutId="active-nav"
-                      className="absolute -bottom-2 left-0 w-full h-0.5 rounded-full bg-gradient-to-r from-accent/70 to-primary shadow-[0_0_16px_oklch(0.72_0.18_236_/_0.8)]"
-                      transition={{ type: 'spring', stiffness: 380, damping: 32 }}
-                    />
-                  ) : (
-                    <span className="absolute -bottom-2 left-0 w-0 h-0.5 rounded-full bg-primary transition-all duration-300 group-hover:w-full" />
-                  )}
-                </Link>
-              </motion.div>
-            )
-          })}
-        </div>
+        {/* Desktop Navigation */}
+        <nav className="hidden items-center gap-8 md:flex">
+          {content.navItems.map((item) => (
+            <Link
+              key={item.label}
+              href={item.href}
+              className="text-sm font-medium text-slate-600 transition-colors hover:text-slate-950"
+            >
+              {item.label}
+            </Link>
+          ))}
+        </nav>
 
-        <div className="hidden md:flex items-center gap-4">
-          <Button variant="ghost" size="sm" className="gap-2 font-bold uppercase tracking-widest text-[10px] hover:bg-primary/10" asChild>
-            <a href="tel:+919430804147">
-              <Phone className="w-3 h-3" />
-              <span>Call</span>
-            </a>
-          </Button>
-          <Button size="sm" className="rounded-full px-6 font-bold uppercase tracking-widest text-[10px]" asChild>
-            <Link href="/contact">Contact</Link>
+        {/* Desktop CTA */}
+        <div className="hidden items-center gap-4 md:flex">
+          <Button size="sm" className="rounded-full bg-slate-950 px-6 text-white shadow-[0_18px_35px_-22px_rgba(15,23,42,0.5)] hover:bg-slate-800">
+            {content.ctaLabel}
           </Button>
         </div>
 
-        <button className="md:hidden p-2 text-foreground" onClick={() => setIsOpen(!isOpen)} aria-label="Toggle menu">
-          {isOpen ? <X className="w-6 h-6" /> : <Menu className="w-6 h-6" />}
-        </button>
-      </div>
-
-      <AnimatePresence>
-        {isOpen && (
-          <motion.div
-            initial={{ opacity: 0, height: 0 }}
-            animate={{ opacity: 1, height: 'auto' }}
-            exit={{ opacity: 0, height: 0 }}
-            className="md:hidden bg-background/95 backdrop-blur-xl border-b border-primary/20 overflow-hidden"
-          >
-            <div className="container mx-auto px-4 py-6 flex flex-col gap-4">
-              {navItems.map((item) => (
-                <Link
-                  key={item.name}
-                  href={item.href}
-                  className={cn(
-                    'text-lg font-medium py-2 border-b border-border/50',
-                    pathname === item.href ? 'text-primary' : 'text-foreground/75'
-                  )}
-                  onClick={() => setIsOpen(false)}
-                >
-                  {item.name}
-                </Link>
-              ))}
-              <div className="flex flex-col gap-3 pt-4">
-                <Button variant="outline" className="w-full justify-center gap-2" asChild>
-                  <a href="tel:+919430804147">
-                    <Phone className="w-4 h-4" />
-                    <span>Call Us</span>
-                  </a>
-                </Button>
-                <Button className="w-full justify-center" asChild>
-                  <Link href="/contact" onClick={() => setIsOpen(false)}>
-                    Get Free Consultation
-                  </Link>
+        {/* Mobile Menu - only render after hydration to avoid ID mismatch */}
+        {mounted ? (
+          <Sheet open={isOpen} onOpenChange={setIsOpen}>
+            <SheetTrigger asChild className="md:hidden">
+              <Button variant="ghost" size="icon" className="rounded-full border border-slate-200/80 bg-white/80 text-slate-900 hover:bg-white">
+                <Menu className="h-5 w-5" />
+                <span className="sr-only">Toggle menu</span>
+              </Button>
+            </SheetTrigger>
+            <SheetContent side="right" className="w-[300px] border-l border-slate-200/80 bg-white/92 sm:w-[400px]">
+              <div className="flex flex-col gap-6 pt-6">
+                <div onClick={() => setIsOpen(false)}>
+                  <BrandLogo size="sm" logo={logo} />
+                </div>
+                <nav className="flex flex-col gap-4">
+                  {content.navItems.map((item) => (
+                    <Link
+                      key={item.label}
+                      href={item.href}
+                      onClick={() => setIsOpen(false)}
+                      className="text-lg font-medium text-slate-600 transition-colors hover:text-slate-950"
+                    >
+                      {item.label}
+                    </Link>
+                  ))}
+                </nav>
+                <Button className="mt-4 rounded-full bg-slate-950 text-white hover:bg-slate-800" onClick={() => setIsOpen(false)}>
+                  {content.ctaLabel}
                 </Button>
               </div>
-            </div>
-          </motion.div>
+            </SheetContent>
+          </Sheet>
+        ) : (
+          <Button variant="ghost" size="icon" className="rounded-full border border-slate-200/80 bg-white/80 text-slate-900 md:hidden">
+            <Menu className="h-5 w-5" />
+            <span className="sr-only">Toggle menu</span>
+          </Button>
         )}
-      </AnimatePresence>
-    </nav>
+      </div>
+    </header>
   )
 }
-
