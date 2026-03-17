@@ -1,7 +1,7 @@
 import { cookies } from "next/headers"
 
 export const ADMIN_EMAIL = "admin@amplizo.com"
-export const ADMIN_PASSWORD = "amplizo#business"
+export const ADMIN_PASSWORD = "Amplizo@2024#Secure"
 export const ADMIN_COOKIE_NAME = "amplizo_admin_session"
 const ADMIN_COOKIE_VALUE = "authenticated"
 
