@@ -17,10 +17,10 @@ export function buildGeneralInquiryMessage(content: SiteContent["site"]) {
   return [
     "Hello Amplizo Team,",
     "",
-    "I would like to learn more about your growth marketing services for my business.",
-    "Please share the next steps for a consultation.",
+    "I’m evaluating how Amplizo’s local growth marketing services can help our business increase bookings and qualified leads.",
+    "Please share your current availability for an introductory consultation and any materials we should prepare ahead of the call.",
     "",
-    "Thank you.",
+    "Best regards,",
   ].join("\n")
 }
 
@@ -34,7 +34,7 @@ export function buildContactMessage(fields: {
   return [
     "Hello Amplizo Team,",
     "",
-    "I would like to discuss a project with your team.",
+    "I’m seeking a focused engagement and would like to review the right next steps with your team.",
     "",
     `Name: ${fields.name}`,
     `Phone: ${fields.phone}`,
@@ -42,9 +42,10 @@ export function buildContactMessage(fields: {
     `Service Needed: ${fields.service}`,
     `Project Details: ${fields.message}`,
     "",
-    "Please get back to me with the best next step.",
+    "Please outline your availability, proposed deliverables, and any preparation you need from our side.",
     "",
-    "Thank you.",
+    "Best regards,",
+    fields.name || "",
   ].join("\n")
 }
 
@@ -57,16 +58,16 @@ export function buildAuditMessage(fields: {
   return [
     "Hello Amplizo Team,",
     "",
-    "I would like to request a free Google Business Profile audit.",
+    "Please prepare the complimentary Google Business Profile audit for the following business.",
     "",
     `Name: ${fields.name}`,
     `Phone: ${fields.phone}`,
     `Business: ${fields.business}`,
     `Google Maps or Website: ${fields.mapsLink || "Not shared yet"}`,
     "",
-    "Please let me know the next steps for the audit.",
+    "I would appreciate the audit insights along with your recommended next steps for implementation.",
     "",
-    "Thank you.",
+    "Looking forward to your response.",
   ].join("\n")
 }
 
@@ -74,12 +75,12 @@ export function buildBookingMessage(slotLabel: string) {
   return [
     "Hello Amplizo Team,",
     "",
-    "I would like to confirm my free strategy call.",
+    "I would like to confirm the following strategy call slot:",
     `Preferred Slot: ${slotLabel}`,
     "",
-    "Please share the meeting confirmation and next steps.",
+    "Please send over the meeting confirmation, dial-in/link details, and any pre-call materials.",
     "",
-    "Thank you.",
+    "Best regards,",
   ].join("\n")
 }
 

@@ -10,7 +10,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { Loader2, CheckCircle2 } from "lucide-react"
 import { getLucideIcon } from "@/lib/icon-map"
 import type { SiteContent } from "@/lib/site-content"
-import { buildContactMessage, buildWhatsAppLink } from "@/lib/marketing-utils"
+import { buildContactMessage, buildWhatsAppLink, slugify } from "@/lib/marketing-utils"
 
 type ContactSectionProps = {
   content: SiteContent["contact"]
@@ -25,11 +25,15 @@ export function ContactSection({ content, site }: ContactSectionProps) {
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault()
     const formData = new FormData(e.currentTarget)
+    const serviceLabel =
+      selectedService && content.serviceOptions.length
+        ? content.serviceOptions.find((service) => slugify(service) === selectedService) ?? "General Inquiry"
+        : "General Inquiry"
     const payload = {
       name: String(formData.get("name") ?? "").trim(),
       phone: String(formData.get("phone") ?? "").trim(),
       business: String(formData.get("business") ?? "").trim(),
-      service: selectedService || "General Inquiry",
+      service: serviceLabel,
       message: String(formData.get("message") ?? "").trim() || "I would like to know more about your services.",
     }
 
@@ -129,7 +133,7 @@ export function ContactSection({ content, site }: ContactSectionProps) {
                         </SelectTrigger>
                         <SelectContent>
                           {content.serviceOptions.map((service) => (
-                            <SelectItem key={service} value={service.toLowerCase().replace(/\s+/g, "-")}>
+                            <SelectItem key={service} value={slugify(service)}>
                               {service}
                             </SelectItem>
                           ))}
