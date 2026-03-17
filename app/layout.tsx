@@ -16,7 +16,6 @@ const spaceGrotesk = Space_Grotesk({
 export const metadata: Metadata = {
   title: 'Amplizo - Marketing & Business Solution | Turn Clicks Into Customers',
   description: 'We help local businesses grow with Google Business Profile optimization, digital marketing, and high-converting websites. Get more leads from Google.',
-  generator: 'v0.app',
   icons: {
     icon: [
       {

@@ -1,9 +1,11 @@
 "use client"
 
 import { Button } from "@/components/ui/button"
+import Link from "next/link"
 import { ArrowRight, Sparkles } from "lucide-react"
 import { getLucideIcon } from "@/lib/icon-map"
 import type { SiteContent } from "@/lib/site-content"
+import { slugify } from "@/lib/marketing-utils"
 
 type ServicesSectionProps = {
   content: SiteContent["services"]
@@ -16,7 +18,7 @@ export function ServicesSection({ content }: ServicesSectionProps) {
         <div className="mx-auto mb-14 max-w-3xl text-center">
           <p className="mb-4 text-sm font-semibold uppercase tracking-[0.28em] text-slate-500">{content.eyebrow}</p>
           <h2 className="mb-6 text-balance text-3xl font-bold tracking-[-0.04em] text-slate-950 md:text-4xl lg:text-5xl" style={{ fontFamily: "var(--font-display)" }}>
-            {content.title} <span className="bg-gradient-to-r from-primary via-sky-500 to-accent bg-clip-text text-transparent">{content.titleHighlight}</span>
+            {content.title} <span className="bg-gradient-to-r from-primary via-amber-600 to-accent bg-clip-text text-transparent">{content.titleHighlight}</span>
           </h2>
           <p className="text-pretty text-lg leading-8 text-slate-600">{content.description}</p>
         </div>
@@ -38,9 +40,11 @@ export function ServicesSection({ content }: ServicesSectionProps) {
                     {service.title}
                   </h3>
                   <p className="mb-6 text-base leading-7 text-slate-600">{service.description}</p>
-                  <Button variant="ghost" className="-ml-4 rounded-full px-4 text-slate-900 hover:bg-slate-100/80 hover:text-slate-950">
-                    {content.learnMoreLabel}
-                    <ArrowRight className="ml-2 h-4 w-4 transition-transform group-hover:translate-x-1" />
+                  <Button variant="ghost" className="-ml-4 rounded-full px-4 text-slate-900 hover:bg-slate-100/80 hover:text-slate-950" asChild>
+                    <Link href={`/services#${slugify(service.title)}`}>
+                      {content.learnMoreLabel}
+                      <ArrowRight className="ml-2 h-4 w-4 transition-transform group-hover:translate-x-1" />
+                    </Link>
                   </Button>
                 </div>
               </article>

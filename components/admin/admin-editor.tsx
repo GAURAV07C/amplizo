@@ -11,7 +11,8 @@ type AdminEditorProps = {
   initialContent: SiteContent
 }
 
-type SaveState = Record<string, "idle" | "saving" | "saved" | "error">
+type SaveStatus = "idle" | "saving" | "saved" | "error"
+type SaveState = Record<string, { status: SaveStatus; message?: string }>
 type JsonValue = string | number | boolean | null | JsonValue[] | { [key: string]: JsonValue }
 
 function cloneValue<T>(value: T): T {
@@ -79,7 +80,6 @@ function labelize(value: string) {
 }
 
 export function AdminEditor({ initialContent }: AdminEditorProps) {
-  const router = useRouter()
   const sections = useMemo(
     () => Object.entries(initialContent) as Array<[keyof SiteContent, SiteContent[keyof SiteContent]]>,
     [initialContent],
@@ -87,32 +87,50 @@ export function AdminEditor({ initialContent }: AdminEditorProps) {
   const [drafts, setDrafts] = useState(() => cloneValue(initialContent))
   const [saveState, setSaveState] = useState<SaveState>({})
   const [isPending, startTransition] = useTransition()
+  const router = useRouter()
 
   const updateSectionValue = (section: keyof SiteContent, path: Array<string | number>, nextValue: JsonValue) => {
     setDrafts((current) => ({
       ...current,
       [section]: setAtPath(current[section] as JsonValue, path, nextValue) as SiteContent[keyof SiteContent],
     }))
+    setSaveState((current) => ({
+      ...current,
+      [section]: { status: "idle" },
+    }))
   }
 
   const saveSection = async (section: keyof SiteContent) => {
     try {
-      setSaveState((current) => ({ ...current, [section]: "saving" }))
+      setSaveState((current) => ({ ...current, [section]: { status: "saving" } }))
 
       const response = await fetch("/api/admin/content", {
         method: "PATCH",
         headers: { "Content-Type": "application/json" },
+        credentials: "same-origin",
+        cache: "no-store",
         body: JSON.stringify({ section, value: drafts[section] }),
       })
 
       if (!response.ok) {
-        throw new Error("Failed to save")
+        const data = await response.json().catch(() => ({ error: "Failed to save this section." }))
+
+        if (response.status === 401) {
+          startTransition(() => {
+            router.push("/admin")
+            router.refresh()
+          })
+        }
+
+        throw new Error(data.error ?? "Failed to save this section.")
       }
 
-      setSaveState((current) => ({ ...current, [section]: "saved" }))
-      startTransition(() => router.refresh())
-    } catch {
-      setSaveState((current) => ({ ...current, [section]: "error" }))
+      const nextContent = (await response.json()) as SiteContent
+      setDrafts(cloneValue(nextContent))
+      setSaveState((current) => ({ ...current, [section]: { status: "saved", message: "Saved successfully." } }))
+    } catch (error) {
+      const message = error instanceof Error ? error.message : "Failed to save this section."
+      setSaveState((current) => ({ ...current, [section]: { status: "error", message } }))
     }
   }
 
@@ -316,32 +334,30 @@ export function AdminEditor({ initialContent }: AdminEditorProps) {
             value={`section-${section}`}
             className="overflow-hidden rounded-[2rem] border border-white/80 bg-[linear-gradient(180deg,rgba(255,255,255,0.94),rgba(248,250,252,0.9))] px-6 shadow-[0_24px_60px_-42px_rgba(15,23,42,0.35)] backdrop-blur"
           >
-            <AccordionTrigger className="py-6 hover:no-underline">
-              <div className="flex w-full flex-col gap-3 text-left md:flex-row md:items-center md:justify-between">
+            <div className="flex flex-col gap-3 py-6 md:flex-row md:items-center md:justify-between">
+              <AccordionTrigger className="flex-1 py-0 hover:no-underline">
                 <div>
                   <h2 className="text-2xl font-bold capitalize text-slate-950" style={{ fontFamily: "var(--font-display)" }}>
                     {section}
                   </h2>
                   <p className="text-sm text-slate-500">Is section ka form-based editor.</p>
                 </div>
-                <div className="flex items-center gap-3">
-                  {saveState[section] === "saved" ? <span className="text-sm text-emerald-600">Saved</span> : null}
-                  {saveState[section] === "error" ? <span className="text-sm text-red-600">Save failed</span> : null}
-                  <Button
-                    type="button"
-                    className="rounded-full bg-slate-950 text-white hover:bg-slate-800"
-                    onClick={(event) => {
-                      event.preventDefault()
-                      event.stopPropagation()
-                      saveSection(section)
-                    }}
-                    disabled={saveState[section] === "saving"}
-                  >
-                    {saveState[section] === "saving" ? "Saving..." : `Save ${section}`}
-                  </Button>
-                </div>
+              </AccordionTrigger>
+              <div className="flex flex-wrap items-center gap-3 md:justify-end">
+                {saveState[section]?.status === "saved" ? <span className="text-sm text-emerald-600">Saved</span> : null}
+                {saveState[section]?.status === "error" ? (
+                  <span className="max-w-full text-sm text-red-600 md:max-w-[280px]">{saveState[section]?.message ?? "Save failed"}</span>
+                ) : null}
+                <Button
+                  type="button"
+                  className="rounded-full bg-slate-950 text-white hover:bg-slate-800"
+                  onClick={() => saveSection(section)}
+                  disabled={saveState[section]?.status === "saving"}
+                >
+                  {saveState[section]?.status === "saving" ? "Saving..." : `Save ${section}`}
+                </Button>
               </div>
-            </AccordionTrigger>
+            </div>
             <AccordionContent className="pb-6">
               <Accordion type="multiple" className="space-y-4">
                 {Object.entries(drafts[section] as Record<string, JsonValue>).map(([fieldKey, fieldValue]) => (

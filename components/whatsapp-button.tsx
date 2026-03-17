@@ -2,13 +2,14 @@
 
 import { MessageCircle } from "lucide-react"
 import type { SiteContent } from "@/lib/site-content"
+import { buildGeneralInquiryMessage, buildWhatsAppLink } from "@/lib/marketing-utils"
 
 type WhatsAppButtonProps = {
   content: SiteContent["site"]
 }
 
 export function WhatsAppButton({ content }: WhatsAppButtonProps) {
-  const whatsappLink = `https://wa.me/${content.whatsappNumber}?text=${encodeURIComponent(content.whatsappMessage)}`
+  const whatsappLink = buildWhatsAppLink(content.whatsappNumber, buildGeneralInquiryMessage(content))
 
   return (
     <a

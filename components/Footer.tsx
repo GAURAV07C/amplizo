@@ -3,6 +3,7 @@ import { Facebook, Twitter, Instagram, Linkedin } from "lucide-react"
 import { BrandLogo } from "@/components/brand-logo"
 import type { SiteContent } from "@/lib/site-content"
 import { getLucideIcon } from "@/lib/icon-map"
+import { resolveFooterLink } from "@/lib/marketing-utils"
 
 const socialIconMap = { Facebook, Twitter, Instagram, Linkedin }
 
@@ -31,7 +32,7 @@ export function Footer({ content, logo, contactInfo }: FooterProps) {
                 return (
                   <Link
                     key={social.label}
-                    href={social.href}
+                    href={resolveFooterLink(social.label, social.href)}
                     className="flex h-11 w-11 items-center justify-center rounded-2xl border border-white/70 bg-white/85 text-slate-500 shadow-[0_18px_35px_-28px_rgba(15,23,42,0.45)] transition-all hover:-translate-y-0.5 hover:border-primary/20 hover:bg-slate-950 hover:text-white"
                     aria-label={social.label}
                   >
@@ -48,7 +49,7 @@ export function Footer({ content, logo, contactInfo }: FooterProps) {
             <ul className="space-y-3">
               {content.linkGroups.services.map((link) => (
                 <li key={link.label}>
-                  <Link href={link.href} className="text-sm text-slate-600 transition-colors hover:text-slate-950">
+                  <Link href={resolveFooterLink(link.label, link.href)} className="text-sm text-slate-600 transition-colors hover:text-slate-950">
                     {link.label}
                   </Link>
                 </li>
@@ -62,7 +63,7 @@ export function Footer({ content, logo, contactInfo }: FooterProps) {
             <ul className="space-y-3">
               {content.linkGroups.company.map((link) => (
                 <li key={link.label}>
-                  <Link href={link.href} className="text-sm text-slate-600 transition-colors hover:text-slate-950">
+                  <Link href={resolveFooterLink(link.label, link.href)} className="text-sm text-slate-600 transition-colors hover:text-slate-950">
                     {link.label}
                   </Link>
                 </li>
@@ -76,7 +77,7 @@ export function Footer({ content, logo, contactInfo }: FooterProps) {
             <ul className="space-y-3">
               {content.linkGroups.support.map((link) => (
                 <li key={link.label}>
-                  <Link href={link.href} className="text-sm text-slate-600 transition-colors hover:text-slate-950">
+                  <Link href={resolveFooterLink(link.label, link.href)} className="text-sm text-slate-600 transition-colors hover:text-slate-950">
                     {link.label}
                   </Link>
                 </li>

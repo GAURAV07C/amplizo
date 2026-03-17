@@ -1,5 +1,5 @@
 import type { Metadata } from "next"
-import { Navbar } from "@/components/Navbar"
+import { Navbar } from "@/components/navbar"
 import { HeroSection } from "@/components/hero-section"
 import { MetricsBar } from "@/components/metrics-bar"
 import { ServicesSection } from "@/components/services-section"
@@ -11,7 +11,7 @@ import { Testimonials } from "@/components/testimonials"
 import { LeadMagnet } from "@/components/lead-magnet"
 import { BookingSection } from "@/components/booking-section"
 import { ContactSection } from "@/components/contact-section"
-import { Footer } from "@/components/Footer"
+import { Footer } from "@/components/footer"
 import { WhatsAppButton } from "@/components/whatsapp-button"
 import { getSiteContent } from "@/lib/content-store"
 
@@ -31,8 +31,8 @@ export default async function Home() {
 
   return (
     <main className="min-h-screen bg-transparent">
-      <Navbar content={content.navbar} logo={content.site.logo} />
-      <HeroSection content={content.hero} />
+      <Navbar content={content.navbar} site={content.site} />
+      <HeroSection content={content.hero} site={content.site} />
       <MetricsBar content={content.metricsBar} />
       <ServicesSection content={content.services} />
       <PortfolioSection content={content.portfolio} />
@@ -40,9 +40,9 @@ export default async function Home() {
       <AnalyticsSection content={content.analytics} />
       <CaseStudies content={content.caseStudies} />
       <Testimonials content={content.testimonials} />
-      <LeadMagnet content={content.leadMagnet} />
-      <BookingSection content={content.booking} />
-      <ContactSection content={content.contact} />
+      <LeadMagnet content={content.leadMagnet} site={content.site} />
+      <BookingSection content={content.booking} site={content.site} />
+      <ContactSection content={content.contact} site={content.site} />
       <Footer content={content.footer} logo={content.site.logo} contactInfo={content.contact.info} />
       <WhatsAppButton content={content.site} />
     </main>

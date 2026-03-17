@@ -1,19 +1,24 @@
 "use client"
 
 import Image from "next/image"
+import Link from "next/link"
 import { Button } from "@/components/ui/button"
 import { Badge } from "@/components/ui/badge"
 import { ArrowRight, MessageCircle, Star } from "lucide-react"
 import { getLucideIcon } from "@/lib/icon-map"
 import type { SiteContent } from "@/lib/site-content"
+import { buildGeneralInquiryMessage, buildWhatsAppLink } from "@/lib/marketing-utils"
 
 type HeroSectionProps = {
   content: SiteContent["hero"]
+  site: SiteContent["site"]
 }
 
-export function HeroSection({ content }: HeroSectionProps) {
+export function HeroSection({ content, site }: HeroSectionProps) {
+  const whatsappLink = buildWhatsAppLink(site.whatsappNumber, buildGeneralInquiryMessage(site))
+
   return (
-    <section className="relative overflow-hidden bg-[radial-gradient(circle_at_top_left,rgba(37,99,235,0.12),transparent_28%),radial-gradient(circle_at_85%_20%,rgba(16,185,129,0.12),transparent_22%),linear-gradient(180deg,rgba(255,255,255,0.98),rgba(241,245,249,0.82)_46%,rgba(255,255,255,1))] pb-20 pt-14 md:pb-28 md:pt-20">
+    <section id="top" className="relative overflow-hidden bg-[radial-gradient(circle_at_top_left,rgba(168,85,47,0.14),transparent_28%),radial-gradient(circle_at_85%_20%,rgba(86,107,88,0.12),transparent_22%),linear-gradient(180deg,rgba(255,251,247,0.98),rgba(247,242,235,0.84)_46%,rgba(255,255,255,1))] pb-20 pt-10 md:pb-28 md:pt-20">
       <div className="absolute inset-0 -z-10">
         <div className="absolute left-[8%] top-10 h-56 w-56 rounded-full bg-primary/10 blur-3xl" />
         <div className="absolute right-[10%] top-24 h-64 w-64 rounded-full bg-accent/10 blur-3xl" />
@@ -38,7 +43,7 @@ export function HeroSection({ content }: HeroSectionProps) {
               style={{ fontFamily: "var(--font-display)" }}
             >
               {content.title}{" "}
-              <span className="bg-gradient-to-r from-primary via-sky-500 to-accent bg-clip-text text-transparent">
+              <span className="bg-gradient-to-r from-primary via-amber-600 to-accent bg-clip-text text-transparent">
                 {content.titleHighlight}
               </span>
             </h1>
@@ -62,17 +67,23 @@ export function HeroSection({ content }: HeroSectionProps) {
               <Button
                 size="lg"
                 className="h-13 rounded-full bg-slate-950 px-8 text-base text-white shadow-[0_18px_35px_-18px_rgba(15,23,42,0.55)] hover:bg-slate-800"
+                asChild
               >
-                {content.primaryCta}
-                <ArrowRight className="ml-2 h-4 w-4" />
+                <Link href="/#booking">
+                  {content.primaryCta}
+                  <ArrowRight className="ml-2 h-4 w-4" />
+                </Link>
               </Button>
               <Button
                 size="lg"
                 variant="outline"
                 className="h-13 rounded-full border-slate-300 bg-white/80 px-8 text-base text-slate-900 backdrop-blur hover:bg-white"
+                asChild
               >
-                <MessageCircle className="mr-2 h-4 w-4" />
-                {content.secondaryCta}
+                <a href={whatsappLink} target="_blank" rel="noopener noreferrer">
+                  <MessageCircle className="mr-2 h-4 w-4" />
+                  {content.secondaryCta}
+                </a>
               </Button>
             </div>
 
@@ -134,7 +145,7 @@ export function HeroSection({ content }: HeroSectionProps) {
                       </p>
                       <p className="mt-1 text-sm leading-6 text-slate-600">{content.pulseDescription}</p>
                     </div>
-                    <div className="rounded-2xl bg-emerald-50 px-3 py-2 text-sm font-semibold text-emerald-600">{content.pulseStatus}</div>
+                    <div className="rounded-2xl bg-primary/12 px-3 py-2 text-sm font-semibold text-primary">{content.pulseStatus}</div>
                   </div>
                 </div>
 

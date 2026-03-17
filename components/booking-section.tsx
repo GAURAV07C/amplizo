@@ -5,12 +5,14 @@ import { Button } from "@/components/ui/button"
 import { Badge } from "@/components/ui/badge"
 import { Calendar, Clock, Video, CheckCircle2 } from "lucide-react"
 import type { SiteContent } from "@/lib/site-content"
+import { buildBookingMessage, buildWhatsAppLink } from "@/lib/marketing-utils"
 
 type BookingSectionProps = {
   content: SiteContent["booking"]
+  site: SiteContent["site"]
 }
 
-export function BookingSection({ content }: BookingSectionProps) {
+export function BookingSection({ content, site }: BookingSectionProps) {
   const [selectedDate, setSelectedDate] = useState<number | null>(null)
   const [selectedTime, setSelectedTime] = useState<string | null>(null)
 
@@ -24,8 +26,18 @@ export function BookingSection({ content }: BookingSectionProps) {
     }
   })
 
+  const handleConfirmBooking = () => {
+    if (selectedDate === null || !selectedTime) {
+      return
+    }
+
+    const slotLabel = `${dates[selectedDate].day}, ${dates[selectedDate].month} ${dates[selectedDate].date} at ${selectedTime}`
+    const bookingLink = buildWhatsAppLink(site.whatsappNumber, buildBookingMessage(slotLabel))
+    window.open(bookingLink, "_blank", "noopener,noreferrer")
+  }
+
   return (
-    <section id="booking" className="relative py-20 md:py-28">
+    <section id="booking" className="relative scroll-mt-24 py-20 md:scroll-mt-28 md:py-28">
       <div className="container mx-auto px-4 md:px-6">
         <div className="mx-auto mb-14 max-w-3xl text-center">
           <p className="mb-4 text-sm font-semibold uppercase tracking-[0.28em] text-slate-500">{content.eyebrow}</p>
@@ -107,7 +119,12 @@ export function BookingSection({ content }: BookingSectionProps) {
               </div>
             </div>
 
-            <Button className="h-12 w-full rounded-full bg-slate-950 text-white hover:bg-slate-800" size="lg" disabled={selectedDate === null || !selectedTime}>
+            <Button
+              className="h-12 w-full rounded-full bg-slate-950 text-white hover:bg-slate-800"
+              size="lg"
+              disabled={selectedDate === null || !selectedTime}
+              onClick={handleConfirmBooking}
+            >
               {content.confirmLabel}
             </Button>
 

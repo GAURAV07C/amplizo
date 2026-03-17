@@ -10,19 +10,30 @@ import { CheckCircle2, Loader2, ArrowRight, Shield } from "lucide-react"
 import { Badge } from "@/components/ui/badge"
 import { getLucideIcon } from "@/lib/icon-map"
 import type { SiteContent } from "@/lib/site-content"
+import { buildAuditMessage, buildWhatsAppLink } from "@/lib/marketing-utils"
 
 type LeadMagnetProps = {
   content: SiteContent["leadMagnet"]
+  site: SiteContent["site"]
 }
 
-export function LeadMagnet({ content }: LeadMagnetProps) {
+export function LeadMagnet({ content, site }: LeadMagnetProps) {
   const [isSubmitting, setIsSubmitting] = useState(false)
   const [isSubmitted, setIsSubmitted] = useState(false)
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault()
+    const formData = new FormData(e.currentTarget)
+    const payload = {
+      name: String(formData.get("name") ?? "").trim(),
+      phone: String(formData.get("phone") ?? "").trim(),
+      business: String(formData.get("business") ?? "").trim(),
+      mapsLink: String(formData.get("mapsLink") ?? "").trim(),
+    }
+
     setIsSubmitting(true)
     await new Promise((resolve) => setTimeout(resolve, 1500))
+    window.open(buildWhatsAppLink(site.whatsappNumber, buildAuditMessage(payload)), "_blank", "noopener,noreferrer")
     setIsSubmitting(false)
     setIsSubmitted(true)
   }
@@ -102,26 +113,26 @@ export function LeadMagnet({ content }: LeadMagnetProps) {
                       <FieldGroup>
                         <Field>
                           <FieldLabel>{content.nameLabel}</FieldLabel>
-                          <Input placeholder={content.namePlaceholder} required className="rounded-lg" />
+                          <Input name="name" placeholder={content.namePlaceholder} required className="rounded-lg" />
                         </Field>
                       </FieldGroup>
                       <FieldGroup>
                         <Field>
                           <FieldLabel>{content.phoneLabel}</FieldLabel>
-                          <Input type="tel" placeholder={content.phonePlaceholder} required className="rounded-lg" />
+                          <Input name="phone" type="tel" placeholder={content.phonePlaceholder} required className="rounded-lg" />
                         </Field>
                       </FieldGroup>
                     </div>
                     <FieldGroup>
                       <Field>
                         <FieldLabel>{content.businessLabel}</FieldLabel>
-                        <Input placeholder={content.businessPlaceholder} required className="rounded-lg" />
+                        <Input name="business" placeholder={content.businessPlaceholder} required className="rounded-lg" />
                       </Field>
                     </FieldGroup>
                     <FieldGroup>
                       <Field>
                         <FieldLabel>{content.mapsLabel}</FieldLabel>
-                        <Input placeholder={content.mapsPlaceholder} className="rounded-lg" />
+                        <Input name="mapsLink" placeholder={content.mapsPlaceholder} className="rounded-lg" />
                       </Field>
                     </FieldGroup>
                     <Button type="submit" className="w-full rounded-lg" size="lg" disabled={isSubmitting}>

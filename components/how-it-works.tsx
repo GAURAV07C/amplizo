@@ -10,7 +10,7 @@ type HowItWorksProps = {
 
 export function HowItWorks({ content }: HowItWorksProps) {
   return (
-    <section className="relative py-20 md:py-28">
+    <section id="process" className="relative py-20 md:py-28">
       <div className="container mx-auto px-4 md:px-6">
         <div className="mx-auto mb-14 max-w-3xl text-center">
           <p className="mb-4 text-sm font-semibold uppercase tracking-[0.28em] text-slate-500">{content.eyebrow}</p>
@@ -40,7 +40,7 @@ export function HowItWorks({ content }: HowItWorksProps) {
                       </h3>
                     </div>
                   </div>
-                  <Badge className="rounded-full bg-emerald-50 px-3 py-1.5 text-emerald-700 hover:bg-emerald-50">{step.timeline}</Badge>
+                  <Badge className="rounded-full bg-primary/12 px-3 py-1.5 text-primary hover:bg-primary/12">{step.timeline}</Badge>
                 </div>
                 <p className="mb-6 text-base leading-7 text-slate-600">{step.description}</p>
                 <div className="grid gap-3 sm:grid-cols-2">

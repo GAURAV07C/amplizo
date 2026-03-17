@@ -7,22 +7,35 @@ import { Textarea } from "@/components/ui/textarea"
 import { Card, CardContent } from "@/components/ui/card"
 import { FieldGroup, Field, FieldLabel } from "@/components/ui/field"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
-import { MapPin, Phone, Mail, Clock, Loader2, CheckCircle2 } from "lucide-react"
+import { Loader2, CheckCircle2 } from "lucide-react"
 import { getLucideIcon } from "@/lib/icon-map"
 import type { SiteContent } from "@/lib/site-content"
+import { buildContactMessage, buildWhatsAppLink } from "@/lib/marketing-utils"
 
 type ContactSectionProps = {
   content: SiteContent["contact"]
+  site: SiteContent["site"]
 }
 
-export function ContactSection({ content }: ContactSectionProps) {
+export function ContactSection({ content, site }: ContactSectionProps) {
   const [isSubmitting, setIsSubmitting] = useState(false)
   const [isSubmitted, setIsSubmitted] = useState(false)
+  const [selectedService, setSelectedService] = useState("")
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault()
+    const formData = new FormData(e.currentTarget)
+    const payload = {
+      name: String(formData.get("name") ?? "").trim(),
+      phone: String(formData.get("phone") ?? "").trim(),
+      business: String(formData.get("business") ?? "").trim(),
+      service: selectedService || "General Inquiry",
+      message: String(formData.get("message") ?? "").trim() || "I would like to know more about your services.",
+    }
+
     setIsSubmitting(true)
     await new Promise((resolve) => setTimeout(resolve, 1500))
+    window.open(buildWhatsAppLink(site.whatsappNumber, buildContactMessage(payload)), "_blank", "noopener,noreferrer")
     setIsSubmitting(false)
     setIsSubmitted(true)
   }
@@ -75,8 +88,8 @@ export function ContactSection({ content }: ContactSectionProps) {
             <CardContent className="p-6 md:p-8">
               {isSubmitted ? (
                 <div className="flex min-h-[420px] flex-col items-center justify-center text-center">
-                  <div className="mb-4 flex h-16 w-16 items-center justify-center rounded-full bg-emerald-50">
-                    <CheckCircle2 className="h-8 w-8 text-emerald-600" />
+                  <div className="mb-4 flex h-16 w-16 items-center justify-center rounded-full bg-primary/12">
+                    <CheckCircle2 className="h-8 w-8 text-primary" />
                   </div>
                   <h4 className="mb-2 text-2xl font-bold text-slate-950" style={{ fontFamily: "var(--font-display)" }}>
                     {content.successTitle}
@@ -89,13 +102,13 @@ export function ContactSection({ content }: ContactSectionProps) {
                     <FieldGroup>
                       <Field>
                         <FieldLabel>{content.nameLabel}</FieldLabel>
-                        <Input placeholder={content.namePlaceholder} required className="rounded-2xl border-slate-200/80 bg-slate-50/70" />
+                        <Input name="name" placeholder={content.namePlaceholder} required className="rounded-2xl border-slate-200/80 bg-slate-50/70" />
                       </Field>
                     </FieldGroup>
                     <FieldGroup>
                       <Field>
                         <FieldLabel>{content.phoneLabel}</FieldLabel>
-                        <Input type="tel" placeholder={content.phonePlaceholder} required className="rounded-2xl border-slate-200/80 bg-slate-50/70" />
+                        <Input name="phone" type="tel" placeholder={content.phonePlaceholder} required className="rounded-2xl border-slate-200/80 bg-slate-50/70" />
                       </Field>
                     </FieldGroup>
                   </div>
@@ -103,14 +116,14 @@ export function ContactSection({ content }: ContactSectionProps) {
                   <FieldGroup>
                     <Field>
                       <FieldLabel>{content.businessLabel}</FieldLabel>
-                      <Input placeholder={content.businessPlaceholder} required className="rounded-2xl border-slate-200/80 bg-slate-50/70" />
+                      <Input name="business" placeholder={content.businessPlaceholder} required className="rounded-2xl border-slate-200/80 bg-slate-50/70" />
                     </Field>
                   </FieldGroup>
 
                   <FieldGroup>
                     <Field>
                       <FieldLabel>{content.serviceLabel}</FieldLabel>
-                      <Select required>
+                      <Select required value={selectedService} onValueChange={setSelectedService}>
                         <SelectTrigger className="rounded-2xl border-slate-200/80 bg-slate-50/70">
                           <SelectValue placeholder={content.servicePlaceholder} />
                         </SelectTrigger>
@@ -128,7 +141,7 @@ export function ContactSection({ content }: ContactSectionProps) {
                   <FieldGroup>
                     <Field>
                       <FieldLabel>{content.messageLabel}</FieldLabel>
-                      <Textarea placeholder={content.messagePlaceholder} className="min-h-[140px] rounded-2xl border-slate-200/80 bg-slate-50/70" />
+                      <Textarea name="message" placeholder={content.messagePlaceholder} className="min-h-[140px] rounded-2xl border-slate-200/80 bg-slate-50/70" />
                     </Field>
                   </FieldGroup>
 

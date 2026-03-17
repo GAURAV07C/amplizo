@@ -1,11 +1,13 @@
 "use client"
 
 import { useState } from "react"
+import Link from "next/link"
 import Image from "next/image"
 import { Badge } from "@/components/ui/badge"
 import { Button } from "@/components/ui/button"
 import { ArrowUpRight, ExternalLink } from "lucide-react"
 import type { SiteContent } from "@/lib/site-content"
+import { slugify } from "@/lib/marketing-utils"
 
 type PortfolioSectionProps = {
   content: SiteContent["portfolio"]
@@ -68,8 +70,10 @@ export function PortfolioSection({ content }: PortfolioSectionProps) {
                       {item.title}
                     </h3>
                   </div>
-                  <Button size="icon" className="rounded-full bg-white/14 text-white backdrop-blur hover:bg-white hover:text-slate-950">
-                    <ExternalLink className="h-4 w-4" />
+                  <Button size="icon" className="rounded-full bg-white/14 text-white backdrop-blur hover:bg-white hover:text-slate-950" asChild>
+                    <Link href={`/portfolio#${slugify(item.title)}`} aria-label={`View ${item.title}`}>
+                      <ExternalLink className="h-4 w-4" />
+                    </Link>
                   </Button>
                 </div>
               </div>
@@ -83,9 +87,11 @@ export function PortfolioSection({ content }: PortfolioSectionProps) {
                     </span>
                   ))}
                 </div>
-                <Button variant="ghost" className="-ml-4 rounded-full px-4 text-slate-900 hover:bg-slate-100/80">
-                  {content.viewProjectLabel}
-                  <ArrowUpRight className="ml-2 h-4 w-4 transition-transform group-hover:translate-x-1 group-hover:-translate-y-1" />
+                <Button variant="ghost" className="-ml-4 rounded-full px-4 text-slate-900 hover:bg-slate-100/80" asChild>
+                  <Link href={`/portfolio#${slugify(item.title)}`}>
+                    {content.viewProjectLabel}
+                    <ArrowUpRight className="ml-2 h-4 w-4 transition-transform group-hover:translate-x-1 group-hover:-translate-y-1" />
+                  </Link>
                 </Button>
               </div>
             </article>
