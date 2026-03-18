@@ -18,11 +18,34 @@ export function Testimonials({ content }: TestimonialsProps) {
           <p className="text-pretty text-lg leading-8 text-slate-600">{content.description}</p>
         </div>
 
-        <div className="grid gap-6 md:grid-cols-2">
+        {/* Stats Bar */}
+        <div className="mb-12 flex flex-wrap items-center justify-center gap-8 rounded-3xl bg-gradient-to-r from-primary/8 via-primary/5 to-secondary/8 px-6 py-8 md:gap-16">
+          <div className="text-center">
+            <p className="text-4xl font-bold text-primary">500+</p>
+            <p className="text-sm text-slate-500">Businesses Served</p>
+          </div>
+          <div className="h-12 w-px bg-slate-200" />
+          <div className="text-center">
+            <p className="text-4xl font-bold text-secondary">10K+</p>
+            <p className="text-sm text-slate-500">Leads Generated</p>
+          </div>
+          <div className="h-12 w-px bg-slate-200" />
+          <div className="text-center">
+            <p className="text-4xl font-bold text-purple-600">4.9</p>
+            <p className="text-sm text-slate-500">Average Rating</p>
+          </div>
+          <div className="h-12 w-px bg-slate-200" />
+          <div className="text-center">
+            <p className="text-4xl font-bold text-primary">300%</p>
+            <p className="text-sm text-slate-500">Avg. Growth</p>
+          </div>
+        </div>
+
+        <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
           {content.items.map((testimonial) => (
             <article
               key={testimonial.name}
-              className="relative overflow-hidden rounded-[2rem] border border-white/80 bg-white/84 p-7 shadow-[0_24px_60px_-38px_rgba(15,23,42,0.38)] ring-1 ring-slate-200/60 backdrop-blur"
+              className="card-hover relative overflow-hidden rounded-[2rem] border border-white/80 bg-white/84 p-7 shadow-[0_24px_60px_-38px_rgba(15,23,42,0.38)] ring-1 ring-slate-200/60 backdrop-blur"
             >
               <div className="absolute right-6 top-6 rounded-full bg-slate-100 p-3 text-slate-300">
                 <Quote className="h-5 w-5" />

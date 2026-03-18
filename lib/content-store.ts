@@ -47,7 +47,34 @@ function normalizeContent(raw: unknown) {
     return cloneDefaultContent()
   }
 
-  return deepMerge(cloneDefaultContent(), raw) satisfies SiteContent
+  let merged = deepMerge(cloneDefaultContent(), raw) satisfies SiteContent
+  
+  // Check if E-Commerce exists in navbar
+  const hasEcommerce = merged.navbar.navItems.some(item => item.href === "/ecommerce")
+  if (!hasEcommerce) {
+    // Build new nav items array with E-Commerce after Portfolio
+    const newNavItems: {label: string, href: string}[] = []
+    for (const item of merged.navbar.navItems) {
+      newNavItems.push(item)
+      if (item.href === "#portfolio") {
+        newNavItems.push({ label: "E-Commerce", href: "/ecommerce" })
+      }
+    }
+    // If Portfolio not found, add at end
+    if (!newNavItems.some(item => item.href === "/ecommerce")) {
+      newNavItems.push({ label: "E-Commerce", href: "/ecommerce" })
+    }
+    // Create new navbar with updated items
+    merged = {
+      ...merged,
+      navbar: {
+        ...merged.navbar,
+        navItems: newNavItems as unknown as typeof merged.navbar.navItems
+      }
+    }
+  }
+  
+  return merged
 }
 
 function getSqliteDb() {

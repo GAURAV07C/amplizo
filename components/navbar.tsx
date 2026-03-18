@@ -52,7 +52,7 @@ export function Navbar({ content, site }: NavbarProps) {
 
         {/* Desktop CTA */}
         <div className="hidden items-center gap-4 md:flex">
-          <Button size="sm" className="rounded-full bg-slate-950 px-6 text-white shadow-[0_18px_35px_-22px_rgba(15,23,42,0.5)] hover:bg-slate-800" asChild>
+          <Button size="sm" className="rounded-full bg-slate-950 px-6 text-white shadow-[0_18px_35px_-22px_rgba(139,92,246,0.5)] hover:bg-slate-800 btn-animate btn-shine" asChild>
             <Link href={resolveNavHref("#booking")}>{content.ctaLabel}</Link>
           </Button>
         </div>
@@ -84,7 +84,7 @@ export function Navbar({ content, site }: NavbarProps) {
                   ))}
                 </nav>
                 <div className="mt-auto space-y-3 pb-6">
-                  <Button className="w-full rounded-full bg-slate-950 text-white hover:bg-slate-800" asChild>
+                  <Button className="w-full rounded-full bg-slate-950 text-white hover:bg-slate-800 btn-animate btn-shine" asChild>
                     <Link href={resolveNavHref("#booking")} onClick={() => setIsOpen(false)}>
                       {content.ctaLabel}
                     </Link>

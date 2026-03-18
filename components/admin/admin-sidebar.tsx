@@ -2,14 +2,25 @@
 
 import Link from "next/link"
 import { usePathname } from "next/navigation"
-import { Bot, ChevronRight, LayoutDashboard, Mail, Settings2, Sparkles } from "lucide-react"
+import { Bot, ChevronRight, LayoutDashboard, Mail, Settings2, Sparkles, ShoppingCart, Store, DollarSign, Package } from "lucide-react"
 import { cn } from "@/lib/utils"
 
 const adminNavItems = [
   { href: "/admin", label: "Dashboard", sublabel: "Overview and quick actions", icon: LayoutDashboard },
   { href: "/admin/sitedata", label: "Site Data", sublabel: "Public website content", icon: Settings2 },
+  { href: "/admin/ecommerce", label: "E-Commerce", sublabel: "List products on marketplaces", icon: ShoppingCart },
   { href: "/admin/ai-agents", label: "AI Agents", sublabel: "Future automations", icon: Bot },
   { href: "/admin/mailer", label: "Mailer", sublabel: "Campaigns and sequences", icon: Mail },
+]
+
+const ecommercePlatforms = [
+  { label: "Etsy Listings", icon: Store, desc: "List on Etsy marketplace" },
+  { label: "eBay Listings", icon: Package, desc: "Sell on eBay globally" },
+  { label: "Amazon Listings", icon: ShoppingCart, desc: "Amazon seller listings" },
+  { label: "Flipkart Listings", icon: Store, desc: "India's top marketplace" },
+  { label: "Meesho Listings", icon: ShoppingCart, desc: "Reselling platform" },
+  { label: "Shopify Store", icon: Store, desc: "Your own online store" },
+  { label: "Lead Management", icon: DollarSign, desc: "Track leads & revenue" },
 ]
 
 export function AdminSidebar() {
@@ -32,7 +43,7 @@ export function AdminSidebar() {
         <div className="mt-5 grid grid-cols-2 gap-3">
           <div className="rounded-2xl border border-white/10 bg-white/6 p-3">
             <p className="text-[11px] uppercase tracking-[0.24em] text-slate-400">Modules</p>
-            <p className="mt-2 text-2xl font-bold text-white">4</p>
+            <p className="mt-2 text-2xl font-bold text-white">5</p>
           </div>
           <div className="rounded-2xl border border-white/10 bg-white/6 p-3">
             <p className="text-[11px] uppercase tracking-[0.24em] text-slate-400">Status</p>
@@ -76,6 +87,36 @@ export function AdminSidebar() {
           )
         })}
       </nav>
+
+      {/* E-Commerce Platforms Section */}
+      <div className="relative mt-6">
+        <div className="mb-3 flex items-center gap-2 px-4">
+          <ShoppingCart className="h-4 w-4 text-emerald-400" />
+          <p className="text-xs font-semibold uppercase tracking-[0.2em] text-slate-400">Marketplace Listings</p>
+        </div>
+        <div className="grid grid-cols-2 gap-2">
+          {ecommercePlatforms.map((platform) => {
+            const Icon = platform.icon
+            return (
+              <button
+                key={platform.label}
+                className="group flex items-center gap-2 rounded-xl border border-white/5 bg-white/5 px-3 py-2.5 text-left transition-all hover:border-white/15 hover:bg-white/10"
+              >
+                <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-lg bg-emerald-500/20 text-emerald-400">
+                  <Icon className="h-4 w-4" />
+                </div>
+                <div className="min-w-0">
+                  <p className="text-xs font-medium text-white truncate">{platform.label}</p>
+                  <p className="text-[10px] text-slate-400 truncate">{platform.desc}</p>
+                </div>
+              </button>
+            )
+          })}
+        </div>
+        <p className="mt-3 px-4 text-[10px] leading-4 text-slate-500">
+          List your products on multiple platforms to maximize reach and generate more leads for your clients.
+        </p>
+      </div>
     </aside>
   )
 }
